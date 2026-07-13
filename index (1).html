@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Your Community | Admin Dashboard</title>
+  <meta name="description" content="Build and customize your professional community onboarding experience.">
+  <!-- Google Fonts Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Confetti CDN for publication celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <!-- ======================================================== -->
+  <!-- CREATION WIZARD (shown until community is published)      -->
+  <!-- ======================================================== -->
+  <div id="creation-wizard">
+
+    <!-- Top Sticky Header -->
+    <header class="app-header">
+      <div class="header-container">
+        <div class="header-brand">
+          <div class="brand-logo">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="32" height="32" rx="8" fill="url(#brand-grad)" />
+              <path d="M16 8C11.58 8 8 11.58 8 16C8 20.42 11.58 24 16 24C20.42 24 24 20.42 24 16C24 11.58 20.42 8 16 8ZM16 11.5C17.38 11.5 18.5 12.62 18.5 14C18.5 15.38 17.38 16.5 16 16.5C14.62 16.5 13.5 15.38 13.5 14C13.5 12.62 14.62 11.5 16 11.5ZM16 21.2C13.67 21.2 11.64 19.98 10.63 18.15C11.96 17.14 13.91 16.5 16 16.5C18.09 16.5 20.04 17.14 21.37 18.15C20.36 19.98 18.33 21.2 16 21.2Z" fill="white"/>
+              <defs>
+                <linearGradient id="brand-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#F97316" />
+                  <stop offset="1" stop-color="#FB923C" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <h1>Create Your Community</h1>
+            <p>Build a professional community in just a few minutes.</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button type="button" class="btn btn-ghost" id="header-save-draft">
+            <i data-lucide="save"></i> Save Draft
+          </button>
+          <button type="button" class="btn btn-primary" id="header-publish">
+            Publish <i data-lucide="rocket"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation Stepper (2 steps) -->
+    <nav class="stepper-nav">
+      <div class="stepper-container">
+        <div class="stepper-track">
+          <div class="stepper-progress-bar" id="progress-line"></div>
+        </div>
+        <div class="step-indicator active" data-step="1">
+          <div class="step-number">1</div>
+          <span class="step-label">Community Details</span>
+        </div>
+        <div class="step-indicator" data-step="2">
+          <div class="step-number">2</div>
+          <span class="step-label">Community Settings</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Body Content Workspace -->
+    <main class="app-workspace">
+      <div class="workspace-container">
+        <!-- Left side: Scrollable Form Area -->
+        <section class="form-section">
+          <form id="community-form" autocomplete="off" novalidate>
+
+            <!-- ======================================================== -->
+            <!-- STEP 1: COMMUNITY DETAILS -->
+            <!-- ======================================================== -->
+            <div class="form-step-pane active" id="pane-step-1">
+              <div class="premium-card">
+                <div class="card-header">
+                  <h2>Step 1: Community Details</h2>
+                  <p>Provide the foundational details for your community presence.</p>
+                </div>
+                <div class="card-body">
+
+                  <!-- Community Logo Upload -->
+                  <div class="form-group full-width">
+                    <label class="form-label">Community Logo</label>
+                    <div class="logo-upload-container">
+                      <div class="logo-upload-box" id="logo-dropzone">
+                        <input type="file" id="logo-input" accept="image/*" class="hidden-file-input">
+                        <div class="upload-placeholder" id="upload-placeholder-state">
+                          <div class="upload-icon">
+                            <i data-lucide="upload-cloud"></i>
+                          </div>
+                          <p class="upload-title">Drag &amp; Drop Logo here or <span>Browse</span></p>
+                          <p class="upload-subtitle">Supports PNG, JPG, or SVG up to 2MB. Preferred square ratio.</p>
+                        </div>
+                        <div class="upload-preview-container hidden" id="upload-preview-state">
+                          <img src="" alt="Community Logo Preview" id="logo-img-preview">
+                          <button type="button" class="btn-remove-logo" id="btn-remove-logo" title="Remove image">
+                            <i data-lucide="trash-2"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Community Name & Slug Grid -->
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label class="form-label required" for="community-name">Community Name</label>
+                      <div class="input-wrapper">
+                        <i class="input-icon" data-lucide="users"></i>
+                        <input type="text" id="community-name" name="name" class="form-control" placeholder="e.g. Artificial Intelligence Association" required>
+                      </div>
+                      <span class="error-msg" id="err-community-name"></span>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label required" for="community-slug">Community Slug</label>
+                      <div class="slug-input-container">
+                        <span class="slug-prefix">connect.com/</span>
+                        <input type="text" id="community-slug" name="slug" class="form-control slug-input" placeholder="community-slug-name" required>
+                      </div>
+                      <p class="helper-text">Unique URL slug for your community namespace.</p>
+                      <span class="error-msg" id="err-community-slug"></span>
+                    </div>
+                  </div>
+
+                  <!-- Contact details: Email & Phone Grid -->
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label class="form-label required" for="email-id">Email ID</label>
+                      <div class="input-wrapper">
+                        <i class="input-icon" data-lucide="mail"></i>
+                        <input type="email" id="email-id" name="email" class="form-control" placeholder="admin@mycommunity.org" required>
+                      </div>
+                      <span class="error-msg" id="err-email-id"></span>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label required" for="phone-number">Phone Number</label>
+                      <div class="phone-input-group">
+                        <div class="custom-select-wrapper country-code-wrapper">
+                          <div class="custom-select-trigger" id="country-code-trigger">
+                            <span id="selected-country-code">+1</span>
+                            <i data-lucide="chevron-down" class="select-chevron"></i>
+                          </div>
+                          <div class="custom-select-options hidden" id="country-code-options">
+                            <div class="select-option" data-value="+1">+1 (US/CA)</div>
+                            <div class="select-option" data-value="+91">+91 (IN)</div>
+                            <div class="select-option" data-value="+44">+44 (UK)</div>
+                            <div class="select-option" data-value="+61">+61 (AU)</div>
+                            <div class="select-option" data-value="+81">+81 (JP)</div>
+                          </div>
+                        </div>
+                        <input type="tel" id="phone-number" name="phone" class="form-control" placeholder="(555) 000-0000" required>
+                      </div>
+                      <span class="error-msg" id="err-phone-number"></span>
+                    </div>
+                  </div>
+
+                  <!-- Website Available Radio Cards -->
+                  <div class="form-group full-width">
+                    <label class="form-label">Website Available?</label>
+                    <div class="radio-card-grid two-cols">
+                      <label class="radio-card">
+                        <input type="radio" name="has-website" value="yes" class="hidden-radio" checked>
+                        <div class="radio-card-content">
+                          <div class="radio-indicator"></div>
+                          <div class="radio-card-text">
+                            <p class="radio-card-title">Yes</p>
+                            <p class="radio-card-subtitle">We have a custom external website.</p>
+                          </div>
+                        </div>
+                      </label>
+                      <label class="radio-card">
+                        <input type="radio" name="has-website" value="no" class="hidden-radio">
+                        <div class="radio-card-content">
+                          <div class="radio-indicator"></div>
+                          <div class="radio-card-text">
+                            <p class="radio-card-title">No</p>
+                            <p class="radio-card-subtitle">We don't have a website yet.</p>
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Website URL (Conditional) -->
+                  <div class="form-group full-width collapsible-container open" id="website-url-group">
+                    <label class="form-label required" for="website-url">Website URL</label>
+                    <div class="input-wrapper">
+                      <i class="input-icon" data-lucide="globe"></i>
+                      <input type="url" id="website-url" name="website" class="form-control" placeholder="https://example.com">
+                    </div>
+                    <span class="error-msg" id="err-website-url"></span>
+                  </div>
+
+                  <!-- Statements: Mission & Vision Grid -->
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label class="form-label" for="mission-statement">Mission Statement</label>
+                      <textarea id="mission-statement" name="mission" class="form-control textarea-fixed" rows="3" placeholder="What is the immediate purpose of your community?"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label" for="vision-statement">Vision Statement</label>
+                      <textarea id="vision-statement" name="vision" class="form-control textarea-fixed" rows="3" placeholder="What is the long-term impact your community wishes to make?"></textarea>
+                    </div>
+                  </div>
+
+                  <!-- Description (Auto-growing) -->
+                  <div class="form-group full-width">
+                    <label class="form-label required" for="community-desc">Community Description</label>
+                    <textarea id="community-desc" name="description" class="form-control textarea-auto-grow" rows="2" placeholder="Tell us more about the community... Describe guidelines, content topics, and goals." required></textarea>
+                    <span class="error-msg" id="err-community-desc"></span>
+                  </div>
+
+                  <!-- Industry Searchable Multi-Select -->
+                  <div class="form-group full-width">
+                    <label class="form-label required">Industry</label>
+                    <div class="custom-multiselect-container" id="industry-multiselect">
+                      <div class="multiselect-trigger" id="industry-trigger">
+                        <div class="selected-chips" id="industry-selected-chips">
+                          <span class="placeholder-text">Search and select industries...</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="select-chevron"></i>
+                      </div>
+                      <div class="multiselect-dropdown hidden" id="industry-dropdown">
+                        <div class="dropdown-search">
+                          <i data-lucide="search" class="search-icon"></i>
+                          <input type="text" id="industry-search-input" placeholder="Search industry...">
+                        </div>
+                        <div class="dropdown-list" id="industry-list">
+                          <!-- Options dynamically loaded in JS -->
+                        </div>
+                      </div>
+                    </div>
+                    <span class="error-msg" id="err-industry"></span>
+                  </div>
+
+                  <!-- Specialization & Highlights -->
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label class="form-label required" for="area-specialization">Area of Specialization</label>
+                      <div class="custom-select-wrapper">
+                        <div class="custom-select-trigger" id="specialization-trigger">
+                          <span id="selected-specialization" class="placeholder-text">Select specialization...</span>
+                          <i data-lucide="chevron-down" class="select-chevron"></i>
+                        </div>
+                        <div class="custom-select-options hidden" id="specialization-options">
+                          <div class="select-option" data-value="software-eng">Software Engineering</div>
+                          <div class="select-option" data-value="deep-learning">Deep Learning</div>
+                          <div class="select-option" data-value="biotech">Biotechnology</div>
+                          <div class="select-option" data-value="product-management">Product Management</div>
+                          <div class="select-option" data-value="ui-ux-design">UI/UX Design</div>
+                          <div class="select-option" data-value="fintech">Fintech &amp; Finance</div>
+                          <div class="select-option" data-value="healthcare-tech">Healthcare IT</div>
+                          <div class="select-option" data-value="other">Other Fields</div>
+                        </div>
+                      </div>
+                      <span class="error-msg" id="err-specialization"></span>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label" for="highlights-statement">Highlights</label>
+                      <textarea id="highlights-statement" name="highlights" class="form-control textarea-fixed" rows="3" placeholder="Key bullet points or standout details..."></textarea>
+                    </div>
+                  </div>
+
+                  <!-- Category, Founded Date & Member Count Grid -->
+                  <div class="form-grid three-cols">
+                    <div class="form-group">
+                      <label class="form-label required" for="community-category">Community Category</label>
+                      <div class="custom-select-wrapper">
+                        <div class="custom-select-trigger" id="category-trigger">
+                          <span id="selected-category" class="placeholder-text">Select Category...</span>
+                          <i data-lucide="chevron-down" class="select-chevron"></i>
+                        </div>
+                        <div class="custom-select-options hidden" id="category-options">
+                          <div class="select-option" data-value="Academic">Academic</div>
+                          <div class="select-option" data-value="Professional">Professional</div>
+                          <div class="select-option" data-value="Research">Research</div>
+                          <div class="select-option" data-value="NGO">NGO</div>
+                          <div class="select-option" data-value="Corporate">Corporate</div>
+                        </div>
+                      </div>
+                      <span class="error-msg" id="err-category"></span>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label required" for="founded-date">Founded Date</label>
+                      <div class="input-wrapper">
+                        <i class="input-icon" data-lucide="calendar"></i>
+                        <input type="date" id="founded-date" name="founded_date" class="form-control" required>
+                      </div>
+                      <span class="error-msg" id="err-founded-date"></span>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label required" for="member-count">Member Count</label>
+                      <div class="input-wrapper">
+                        <i class="input-icon" data-lucide="users-2"></i>
+                        <input type="number" id="member-count" name="member_count" class="form-control" placeholder="100" min="1" required>
+                      </div>
+                      <span class="error-msg" id="err-member-count"></span>
+                    </div>
+                  </div>
+
+                  <!-- Physical Location Radio Cards -->
+                  <div class="form-group full-width">
+                    <label class="form-label">Physical Location Available?</label>
+                    <div class="radio-card-grid two-cols">
+                      <label class="radio-card">
+                        <input type="radio" name="has-location" value="yes" class="hidden-radio">
+                        <div class="radio-card-content">
+                          <div class="radio-indicator"></div>
+                          <div class="radio-card-text">
+                            <p class="radio-card-title">Yes</p>
+                            <p class="radio-card-subtitle">We have physical headquarters or meetups.</p>
+                          </div>
+                        </div>
+                      </label>
+                      <label class="radio-card">
+                        <input type="radio" name="has-location" value="no" class="hidden-radio" checked>
+                        <div class="radio-card-content">
+                          <div class="radio-indicator"></div>
+                          <div class="radio-card-text">
+                            <p class="radio-card-title">No</p>
+                            <p class="radio-card-subtitle">We operate fully virtually online.</p>
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Physical Address details (Conditional) -->
+                  <div class="collapsible-container" id="location-details-group">
+                    <div class="form-grid three-cols">
+                      <div class="form-group">
+                        <label class="form-label required" for="country-select">Country</label>
+                        <div class="custom-select-wrapper">
+                          <div class="custom-select-trigger" id="country-trigger">
+                            <span id="selected-country" class="placeholder-text">Select Country...</span>
+                            <i data-lucide="chevron-down" class="select-chevron"></i>
+                          </div>
+                          <div class="custom-select-options hidden" id="country-options">
+                            <!-- Filled by JS -->
+                          </div>
+                        </div>
+                        <span class="error-msg" id="err-country"></span>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="form-label required" for="state-select">State</label>
+                        <div class="custom-select-wrapper disabled" id="state-select-wrapper">
+                          <div class="custom-select-trigger" id="state-trigger">
+                            <span id="selected-state" class="placeholder-text">Select State...</span>
+                            <i data-lucide="chevron-down" class="select-chevron"></i>
+                          </div>
+                          <div class="custom-select-options hidden" id="state-options">
+                            <!-- Filled dynamically -->
+                          </div>
+                        </div>
+                        <span class="error-msg" id="err-state"></span>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="form-label required" for="city-select">City</label>
+                        <div class="custom-select-wrapper disabled" id="city-select-wrapper">
+                          <div class="custom-select-trigger" id="city-trigger">
+                            <span id="selected-city" class="placeholder-text">Select City...</span>
+                            <i data-lucide="chevron-down" class="select-chevron"></i>
+                          </div>
+                          <div class="custom-select-options hidden" id="city-options">
+                            <!-- Filled dynamically -->
+                          </div>
+                        </div>
+                        <span class="error-msg" id="err-city"></span>
+                      </div>
+                    </div>
+
+                    <div class="form-group full-width margin-top-sm">
+                      <label class="form-label required" for="address-details">Street Address</label>
+                      <textarea id="address-details" name="address" class="form-control textarea-fixed" rows="2" placeholder="Suite #, Building, Street Name"></textarea>
+                      <span class="error-msg" id="err-address"></span>
+                    </div>
+                  </div>
+
+                  <!-- Tag Input System -->
+                  <div class="form-group full-width">
+                    <label class="form-label">Community Tags</label>
+                    <div class="tag-input-container" id="tag-input-box">
+                      <div class="tags-wrapper" id="tags-wrapper">
+                        <!-- Chips injected by JS -->
+                        <input type="text" id="tag-text-input" placeholder="Type a tag &amp; press Enter or comma...">
+                      </div>
+                    </div>
+                    <p class="helper-text">Press Enter or comma to create a tag. Examples: Technology, AI, Education, Design</p>
+                  </div>
+
+                  <!-- Visibility Rules -->
+                  <div class="form-group full-width">
+                    <label class="form-label">Community Visibility</label>
+                    <div class="radio-card-grid three-cols">
+                      <label class="radio-card">
+                        <input type="radio" name="visibility" value="Public" class="hidden-radio" checked>
+                        <div class="radio-card-content align-center">
+                          <div class="card-icon indigo">
+                            <i data-lucide="globe-2"></i>
+                          </div>
+                          <p class="radio-card-title">Public</p>
+                          <p class="radio-card-subtitle">Anyone can find and join this space.</p>
+                        </div>
+                      </label>
+
+                      <label class="radio-card">
+                        <input type="radio" name="visibility" value="Private" class="hidden-radio">
+                        <div class="radio-card-content align-center">
+                          <div class="card-icon purple">
+                            <i data-lucide="lock"></i>
+                          </div>
+                          <p class="radio-card-title">Private</p>
+                          <p class="radio-card-subtitle">Visible in searches, requires approval to join.</p>
+                        </div>
+                      </label>
+
+                      <label class="radio-card">
+                        <input type="radio" name="visibility" value="Invite Only" class="hidden-radio">
+                        <div class="radio-card-content align-center">
+                          <div class="card-icon gray">
+                            <i data-lucide="mail-check"></i>
+                          </div>
+                          <p class="radio-card-title">Invite Only</p>
+                          <p class="radio-card-subtitle">Hidden from directories. Access via link only.</p>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Terms & Notifications (Checkboxes) -->
+                  <div class="form-group full-width margin-top-md">
+                    <div class="checkbox-list">
+                      <label class="custom-checkbox-container">
+                        <input type="checkbox" id="rules-accepted" name="rules_accepted" required>
+                        <span class="checkmark"></span>
+                        <span class="checkbox-label">I accept the community code of conduct and rules. <span class="required-star">*</span></span>
+                      </label>
+                      <span class="error-msg" id="err-rules-accepted"></span>
+
+                      <label class="custom-checkbox-container">
+                        <input type="checkbox" id="email-notify" name="email_notify" checked>
+                        <span class="checkmark"></span>
+                        <span class="checkbox-label">Enable email notifications for new community registrations.</span>
+                      </label>
+
+                      <label class="custom-checkbox-container">
+                        <input type="checkbox" id="indexing-enabled" name="indexing_enabled" checked>
+                        <span class="checkmark"></span>
+                        <span class="checkbox-label">Allow search engines to index this community profile.</span>
+                      </label>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- ======================================================== -->
+            <!-- STEP 2: COMMUNITY SETTINGS -->
+            <!-- ======================================================== -->
+            <div class="form-step-pane" id="pane-step-2">
+
+              <!-- Membership Approval Card -->
+              <div class="premium-card margin-bottom-lg">
+                <div class="card-header">
+                  <h2>Step 2: Community Settings</h2>
+                  <p>Configure user onboarding flows, features, and permissions.</p>
+                </div>
+                <div class="card-body">
+                  <div class="form-group full-width">
+                    <label class="form-label">Membership Approval</label>
+                    <div class="radio-card-grid two-cols">
+                      <label class="radio-card">
+                        <input type="radio" name="approval-mode" value="Automatic" class="hidden-radio" checked>
+                        <div class="radio-card-content">
+                          <div class="radio-indicator"></div>
+                          <div class="radio-card-text">
+                            <p class="radio-card-title">Automatic Approval</p>
+                            <p class="radio-card-subtitle">New members join instantly upon request.</p>
+                          </div>
+                        </div>
+                      </label>
+                      <label class="radio-card">
+                        <input type="radio" name="approval-mode" value="Manual" class="hidden-radio">
+                        <div class="radio-card-content">
+                          <div class="radio-indicator"></div>
+                          <div class="radio-card-text">
+                            <p class="radio-card-title">Manual Moderation</p>
+                            <p class="radio-card-subtitle">Administrators must review and approve each application.</p>
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Settings Toggles / Checkboxes Section -->
+              <div class="premium-card">
+                <div class="card-header border-bottom">
+                  <h3>Member Onboarding &amp; Posting Rules</h3>
+                </div>
+                <div class="card-body">
+                  <div class="toggle-card-list">
+                    <!-- Require Profile Completion -->
+                    <div class="toggle-card">
+                      <div class="toggle-card-info">
+                        <span class="toggle-card-title">Require Profile Completion</span>
+                        <span class="toggle-card-desc">Members must fill out bio and avatar before participating.</span>
+                      </div>
+                      <label class="switch">
+                        <input type="checkbox" id="req-profile" checked>
+                        <span class="switch-slider"></span>
+                      </label>
+                    </div>
+
+                    <!-- Require Email Verification -->
+                    <div class="toggle-card">
+                      <div class="toggle-card-info">
+                        <span class="toggle-card-title">Require Email Verification</span>
+                        <span class="toggle-card-desc">Verify registered email accounts prior to onboarding.</span>
+                      </div>
+                      <label class="switch">
+                        <input type="checkbox" id="req-verification" checked>
+                        <span class="switch-slider"></span>
+                      </label>
+                    </div>
+
+                    <!-- Allow Guests -->
+                    <div class="toggle-card">
+                      <div class="toggle-card-info">
+                        <span class="toggle-card-title">Allow Guests</span>
+                        <span class="toggle-card-desc">Unregistered visitors can read basic discussion boards.</span>
+                      </div>
+                      <label class="switch">
+                        <input type="checkbox" id="allow-guests">
+                        <span class="switch-slider"></span>
+                      </label>
+                    </div>
+
+                    <!-- Allow Public Posts -->
+                    <div class="toggle-card">
+                      <div class="toggle-card-info">
+                        <span class="toggle-card-title">Allow Public Posts</span>
+                        <span class="toggle-card-desc">Permit general public sharing on main feed layout.</span>
+                      </div>
+                      <label class="switch">
+                        <input type="checkbox" id="allow-public-posts">
+                        <span class="switch-slider"></span>
+                      </label>
+                    </div>
+
+                    <!-- Allow Member Invitations -->
+                    <div class="toggle-card">
+                      <div class="toggle-card-info">
+                        <span class="toggle-card-title">Allow Member Invitations</span>
+                        <span class="toggle-card-desc">Let active community members issue invitation links.</span>
+                      </div>
+                      <label class="switch">
+                        <input type="checkbox" id="allow-invitations" checked>
+                        <span class="switch-slider"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Enabled Features Section -->
+              <div class="premium-card margin-top-lg">
+                <div class="card-header border-bottom">
+                  <h3>Enable Features &amp; Extensions</h3>
+                </div>
+                <div class="card-body">
+                  <div class="features-grid">
+                    <!-- Events -->
+                    <label class="feature-checkbox-card">
+                      <input type="checkbox" id="feat-events" checked>
+                      <div class="feature-card-content">
+                        <div class="feature-icon bg-indigo">
+                          <i data-lucide="calendar-range"></i>
+                        </div>
+                        <div class="feature-meta">
+                          <span class="feature-title">Enable Events</span>
+                          <span class="feature-desc">Schedule, track, and RSVPs for live webinars and meetups.</span>
+                        </div>
+                        <div class="feature-checked-indicator">
+                          <i data-lucide="check"></i>
+                        </div>
+                      </div>
+                    </label>
+
+                    <!-- Discussion Forum -->
+                    <label class="feature-checkbox-card">
+                      <input type="checkbox" id="feat-forum" checked>
+                      <div class="feature-card-content">
+                        <div class="feature-icon bg-purple">
+                          <i data-lucide="messages-square"></i>
+                        </div>
+                        <div class="feature-meta">
+                          <span class="feature-title">Discussion Forum</span>
+                          <span class="feature-desc">Interactive threads, channels, and member Q&amp;A pages.</span>
+                        </div>
+                        <div class="feature-checked-indicator">
+                          <i data-lucide="check"></i>
+                        </div>
+                      </div>
+                    </label>
+
+                    <!-- Resources Library -->
+                    <label class="feature-checkbox-card">
+                      <input type="checkbox" id="feat-library" checked>
+                      <div class="feature-card-content">
+                        <div class="feature-icon bg-emerald">
+                          <i data-lucide="folder-git-2"></i>
+                        </div>
+                        <div class="feature-meta">
+                          <span class="feature-title">Resources Library</span>
+                          <span class="feature-desc">Store PDFs, templates, code snippets, and guides.</span>
+                        </div>
+                        <div class="feature-checked-indicator">
+                          <i data-lucide="check"></i>
+                        </div>
+                      </div>
+                    </label>
+
+                    <!-- Job Board -->
+                    <label class="feature-checkbox-card">
+                      <input type="checkbox" id="feat-jobs">
+                      <div class="feature-card-content">
+                        <div class="feature-icon bg-rose">
+                          <i data-lucide="briefcase"></i>
+                        </div>
+                        <div class="feature-meta">
+                          <span class="feature-title">Enable Job Board</span>
+                          <span class="feature-desc">Publish careers, hire from internal talent pools.</span>
+                        </div>
+                        <div class="feature-checked-indicator">
+                          <i data-lucide="check"></i>
+                        </div>
+                      </div>
+                    </label>
+
+                    <!-- AI Assistant -->
+                    <label class="feature-checkbox-card">
+                      <input type="checkbox" id="feat-ai" checked>
+                      <div class="feature-card-content">
+                        <div class="feature-icon bg-cyan">
+                          <i data-lucide="sparkles"></i>
+                        </div>
+                        <div class="feature-meta">
+                          <span class="feature-title">Enable AI Assistant</span>
+                          <span class="feature-desc">Moderation hints, draft suggestions, and post summaries.</span>
+                        </div>
+                        <div class="feature-checked-indicator">
+                          <i data-lucide="check"></i>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </form>
+        </section>
+      </div>
+    </main>
+
+    <!-- Bottom Sticky Actions Footer -->
+    <footer class="app-footer">
+      <div class="footer-container">
+        <div class="footer-left">
+          <button type="button" class="btn btn-outline hidden" id="footer-btn-back">
+            <i data-lucide="arrow-left"></i> Back
+          </button>
+        </div>
+        <div class="footer-right">
+          <button type="button" class="btn btn-ghost" id="footer-btn-save">
+            <i data-lucide="save"></i> Save Draft
+          </button>
+          <button type="button" class="btn btn-primary" id="footer-btn-continue">
+            Next Step <i data-lucide="arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- end #creation-wizard -->
+
+
+  <!-- ======================================================== -->
+  <!-- COMMUNITY DASHBOARD (shown after publish)                 -->
+  <!-- ======================================================== -->
+  <div id="community-dashboard" class="hidden">
+
+    <!-- Dashboard Header -->
+    <header class="dash-header">
+      <div class="dash-header-inner">
+        <div class="dash-brand">
+          <div class="dash-logo-holder" id="dash-logo-holder">
+            <img src="" alt="Community Logo" id="dash-logo-img" class="hidden">
+            <span id="dash-logo-letter">A</span>
+          </div>
+          <div class="dash-brand-info">
+            <h1 id="dash-community-name">Community Name</h1>
+            <div class="dash-meta-row">
+              <span class="dash-meta-badge" id="dash-visibility-badge">Public</span>
+              <span class="dash-meta-item" id="dash-slug-display">connect.com/slug</span>
+              <span class="dash-status-pill"><i data-lucide="circle-check" style="width:14px;height:14px"></i> Live</span>
+            </div>
+          </div>
+        </div>
+        <div class="dash-header-actions">
+          <button type="button" class="btn btn-outline" id="dash-btn-edit">
+            <i data-lucide="pencil"></i> Edit Community
+          </button>
+          <button type="button" class="btn btn-danger" id="dash-btn-delete">
+            <i data-lucide="trash-2"></i> Delete Community
+          </button>
+        </div>
+      </div>
+
+      <!-- Dashboard Tabs -->
+      <div class="dash-tabs">
+        <button type="button" class="dash-tab active" data-tab="overview">
+          <i data-lucide="layout-dashboard"></i> Overview
+        </button>
+        <button type="button" class="dash-tab" data-tab="permissions">
+          <i data-lucide="shield-check"></i> Admin Permissions
+        </button>
+        <button type="button" class="dash-tab" data-tab="analytics">
+          <i data-lucide="bar-chart-3"></i> Analytics
+        </button>
+      </div>
+    </header>
+
+    <!-- Dashboard Body -->
+    <main class="dash-body">
+
+      <!-- ======= TAB: OVERVIEW ======= -->
+      <div class="dash-tab-panel active" id="tab-overview">
+        <div class="dash-overview-grid">
+
+          <!-- Left: Community Info Card -->
+          <div class="dash-info-card">
+            <div class="dash-card-header">
+              <h3><i data-lucide="info"></i> Community Details</h3>
+              <button type="button" class="btn btn-sm btn-outline" id="dash-edit-details-btn">
+                <i data-lucide="pencil"></i> Edit
+              </button>
+            </div>
+            <div class="dash-info-body" id="dash-info-body">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Right: Settings Summary -->
+          <div class="dash-settings-card">
+            <div class="dash-card-header">
+              <h3><i data-lucide="settings-2"></i> Community Settings</h3>
+            </div>
+            <div class="dash-settings-body" id="dash-settings-body">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Stats Row -->
+        <div class="dash-stats-row" id="dash-stats-row">
+          <div class="stat-card">
+            <div class="stat-icon orange"><i data-lucide="users"></i></div>
+            <div class="stat-data">
+              <span class="stat-number" id="stat-total-members">0</span>
+              <span class="stat-label">Total Members</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green"><i data-lucide="user-check"></i></div>
+            <div class="stat-data">
+              <span class="stat-number" id="stat-active-today">0</span>
+              <span class="stat-label">Active Today</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon blue"><i data-lucide="user-plus"></i></div>
+            <div class="stat-data">
+              <span class="stat-number" id="stat-joined-week">0</span>
+              <span class="stat-label">Joined This Week</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon purple"><i data-lucide="shield-check"></i></div>
+            <div class="stat-data">
+              <span class="stat-number" id="stat-admins">0</span>
+              <span class="stat-label">Admins</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= TAB: ADMIN PERMISSIONS ======= -->
+      <div class="dash-tab-panel hidden" id="tab-permissions">
+        <div class="perm-panel-header">
+          <div>
+            <h2>Admin Permissions</h2>
+            <p>Assign specific permissions to community members. The main admin can control who has access to what features.</p>
+          </div>
+        </div>
+
+        <!-- Permission Groups Legend -->
+        <div class="perm-legend-row">
+          <span class="perm-legend-chip orange"><i data-lucide="users"></i> Member Mgmt</span>
+          <span class="perm-legend-chip purple"><i data-lucide="key-round"></i> Admin Mgmt</span>
+          <span class="perm-legend-chip blue"><i data-lucide="file-edit"></i> Content</span>
+          <span class="perm-legend-chip green"><i data-lucide="calendar"></i> Events</span>
+          <span class="perm-legend-chip teal"><i data-lucide="message-square"></i> Comms</span>
+          <span class="perm-legend-chip red"><i data-lucide="shield-alert"></i> Moderation</span>
+          <span class="perm-legend-chip gray"><i data-lucide="bar-chart-3"></i> Analytics</span>
+        </div>
+
+        <!-- Members Table -->
+        <div class="perm-table-wrapper">
+          <table class="perm-table">
+            <thead>
+              <tr>
+                <th class="perm-member-col">Member</th>
+                <th class="perm-role-col">Role</th>
+                <th title="Approve/Reject/Remove/Ban/Invite/Export Members"><i data-lucide="users" style="width:14px;height:14px"></i> Member Mgmt</th>
+                <th title="Add/Remove Admins, Modify Permissions"><i data-lucide="key-round" style="width:14px;height:14px"></i> Admin Mgmt</th>
+                <th title="Edit/Delete/Pin Posts, Manage Resources"><i data-lucide="file-edit" style="width:14px;height:14px"></i> Content</th>
+                <th title="Create/Edit/Cancel Events"><i data-lucide="calendar" style="width:14px;height:14px"></i> Events</th>
+                <th title="Send Announcements, Emails, Push Notifications"><i data-lucide="message-square" style="width:14px;height:14px"></i> Comms</th>
+                <th title="View/Resolve Reports, Suspend Members"><i data-lucide="shield-alert" style="width:14px;height:14px"></i> Moderation</th>
+                <th title="View Analytics Dashboard, Download Reports"><i data-lucide="bar-chart-3" style="width:14px;height:14px"></i> Analytics</th>
+              </tr>
+            </thead>
+            <tbody id="perm-members-tbody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ======= TAB: ANALYTICS ======= -->
+      <div class="dash-tab-panel hidden" id="tab-analytics">
+        <div class="analytics-header">
+          <div>
+            <h2>Community Analytics</h2>
+            <p>Track member growth, engagement, and activity over time.</p>
+          </div>
+          <div class="analytics-filter-row">
+            <select class="form-control analytics-select" id="analytics-period">
+              <option value="7">Last 7 days</option>
+              <option value="30" selected>Last 30 days</option>
+              <option value="90">Last 3 months</option>
+              <option value="365">Last year</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Analytics Stats -->
+        <div class="analytics-stats-grid">
+          <div class="analytics-stat-card orange">
+            <div class="analytics-stat-icon"><i data-lucide="users"></i></div>
+            <div class="analytics-stat-info">
+              <span class="analytics-stat-number" id="an-total">0</span>
+              <span class="analytics-stat-label">Total Members</span>
+              <span class="analytics-stat-change positive">↑ +12% vs last period</span>
+            </div>
+          </div>
+          <div class="analytics-stat-card green">
+            <div class="analytics-stat-icon"><i data-lucide="user-plus"></i></div>
+            <div class="analytics-stat-info">
+              <span class="analytics-stat-number" id="an-new">0</span>
+              <span class="analytics-stat-label">New Joins</span>
+              <span class="analytics-stat-change positive">↑ +8% vs last period</span>
+            </div>
+          </div>
+          <div class="analytics-stat-card blue">
+            <div class="analytics-stat-icon"><i data-lucide="activity"></i></div>
+            <div class="analytics-stat-info">
+              <span class="analytics-stat-number" id="an-active">0</span>
+              <span class="analytics-stat-label">Active Members</span>
+              <span class="analytics-stat-change positive">↑ +5% vs last period</span>
+            </div>
+          </div>
+          <div class="analytics-stat-card purple">
+            <div class="analytics-stat-icon"><i data-lucide="trending-up"></i></div>
+            <div class="analytics-stat-info">
+              <span class="analytics-stat-number" id="an-growth">0%</span>
+              <span class="analytics-stat-label">Growth Rate</span>
+              <span class="analytics-stat-change positive">↑ Trending Up</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Growth Bar Chart (CSS-based) -->
+        <div class="dash-card analytics-chart-card">
+          <div class="dash-card-header">
+            <h3><i data-lucide="bar-chart-2"></i> Member Growth (Last 7 Weeks)</h3>
+          </div>
+          <div class="chart-area" id="growth-chart">
+            <!-- Bars rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Member Join List -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <h3><i data-lucide="list"></i> Member Join History</h3>
+            <div class="analytics-search-wrapper">
+              <i data-lucide="search" class="analytics-search-icon"></i>
+              <input type="text" class="analytics-search-input" id="analytics-search" placeholder="Search members...">
+            </div>
+          </div>
+          <div class="member-join-table-wrapper">
+            <table class="member-join-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Member Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Join Date</th>
+                  <th>Join Time</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="member-join-tbody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div><!-- end #community-dashboard -->
+
+
+  <!-- ======================================================== -->
+  <!-- INTERACTIVE MODALS -->
+  <!-- ======================================================== -->
+
+  <!-- Modal: Draft Saved Notification -->
+  <div class="modal-overlay hidden" id="modal-draft-saved">
+    <div class="modal-window mini-modal">
+      <div class="modal-body text-center py-lg">
+        <div class="animated-success-icon">
+          <svg class="checkmark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+            <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+            <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+          </svg>
+        </div>
+        <h3 class="margin-top-md">Draft Saved Successfully</h3>
+        <p class="text-muted margin-top-sm">We've saved your community setup draft. You can return and complete it at any time.</p>
+        <button type="button" class="btn btn-primary margin-top-md" id="btn-close-draft-modal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Successful Publication Modal -->
+  <div class="modal-overlay hidden" id="modal-success-publish">
+    <div class="modal-window success-modal">
+      <div class="modal-body text-center py-xl">
+        <div class="publish-success-rocket">
+          🚀
+        </div>
+        <h2>Congratulations!</h2>
+        <h3 id="published-community-title">Your Community is Live</h3>
+        <p class="text-muted margin-top-sm">Your community has been created and published. Head to your dashboard to manage members and permissions.</p>
+
+        <div class="published-summary-box">
+          <div class="summary-line">
+            <span class="line-label">Namespace URL:</span>
+            <span class="line-value" id="published-slug-link">connect.com/slug-placeholder</span>
+          </div>
+          <div class="summary-line">
+            <span class="line-label">Visibility:</span>
+            <span class="line-value" id="published-visibility-badge">Public</span>
+          </div>
+          <div class="summary-line">
+            <span class="line-label">Enabled Features:</span>
+            <span class="line-value" id="published-features-list">Events, Forum, Resources</span>
+          </div>
+        </div>
+
+        <div class="action-buttons-group margin-top-lg">
+          <button type="button" class="btn btn-primary" id="btn-success-go-dashboard">
+            Go to Dashboard <i data-lucide="arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Edit Community -->
+  <div class="modal-overlay hidden" id="modal-edit-community">
+    <div class="modal-window large-modal">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h3>Edit Community Details</h3>
+          <p>Update your community information below.</p>
+        </div>
+        <button type="button" class="btn-close-modal" id="btn-close-edit-modal">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal-body custom-scrollbar-y">
+        <form id="edit-community-form" autocomplete="off" novalidate>
+          <div class="edit-form-grid">
+
+            <div class="form-group">
+              <label class="form-label required" for="edit-name">Community Name</label>
+              <div class="input-wrapper">
+                <i class="input-icon" data-lucide="users"></i>
+                <input type="text" id="edit-name" class="form-control" placeholder="Community Name" required>
+              </div>
+              <span class="error-msg" id="edit-err-name"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label required" for="edit-email">Email</label>
+              <div class="input-wrapper">
+                <i class="input-icon" data-lucide="mail"></i>
+                <input type="email" id="edit-email" class="form-control" placeholder="admin@community.org" required>
+              </div>
+              <span class="error-msg" id="edit-err-email"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label required" for="edit-phone">Phone Number</label>
+              <div class="input-wrapper">
+                <i class="input-icon" data-lucide="phone"></i>
+                <input type="tel" id="edit-phone" class="form-control" placeholder="Phone Number" required>
+              </div>
+              <span class="error-msg" id="edit-err-phone"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="edit-website">Website URL</label>
+              <div class="input-wrapper">
+                <i class="input-icon" data-lucide="globe"></i>
+                <input type="url" id="edit-website" class="form-control" placeholder="https://example.com">
+              </div>
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label required" for="edit-description">Description</label>
+              <textarea id="edit-description" class="form-control textarea-fixed" rows="4" placeholder="Community description..." required></textarea>
+              <span class="error-msg" id="edit-err-desc"></span>
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label" for="edit-mission">Mission Statement</label>
+              <textarea id="edit-mission" class="form-control textarea-fixed" rows="2" placeholder="Mission..."></textarea>
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label" for="edit-vision">Vision Statement</label>
+              <textarea id="edit-vision" class="form-control textarea-fixed" rows="2" placeholder="Vision..."></textarea>
+            </div>
+
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="btn-cancel-edit">Cancel</button>
+        <button type="button" class="btn btn-primary" id="btn-save-edit">
+          <i data-lucide="save"></i> Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Delete Confirmation -->
+  <div class="modal-overlay hidden" id="modal-delete-confirm">
+    <div class="modal-window mini-modal">
+      <div class="modal-body text-center py-lg">
+        <div class="delete-warning-icon">
+          <i data-lucide="alert-triangle"></i>
+        </div>
+        <h3 class="margin-top-md">Delete Community?</h3>
+        <p class="text-muted margin-top-sm">This action is <strong>permanent and irreversible</strong>. All members, content, and data will be permanently erased.</p>
+        <p class="delete-confirm-hint margin-top-sm">Type <strong id="delete-community-name-hint">"community-name"</strong> to confirm:</p>
+        <input type="text" id="delete-confirm-input" class="form-control margin-top-sm" placeholder="Type community name...">
+        <div class="action-buttons-group margin-top-lg">
+          <button type="button" class="btn btn-outline" id="btn-cancel-delete">Cancel</button>
+          <button type="button" class="btn btn-danger" id="btn-confirm-delete" disabled>
+            <i data-lucide="trash-2"></i> Delete Forever
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script Application -->
+  <script src="app.js"></script>
+</body>
+</html>
